@@ -14,12 +14,21 @@ int main(){
     short mapFirstColumn = 0;
 
     char **map;
-    map = (char **) malloc(sizeof(char)*mapLength);
+    map = (char **) malloc(mapLength*sizeof(char));
 
     for (int i = 0; i < mapLength; i++)
     {
-        map[i] = (char *) malloc(sizeof(char)*mapHeight);
+        map[i] = (char *) malloc(mapHeight*sizeof(char));
     }
+
+    for (int i = 0; i < mapLength; i++)
+    {
+        for (int j = 0; j < mapHeight; j++)
+        {
+            map[i][j] = 'a';
+        }
+    }
+    
 
     for (int i = 0; i < mapLength; i++)
     {
