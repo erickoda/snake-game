@@ -16,39 +16,42 @@ int main(){
     char **map;
     map = (char **) malloc(mapLength*sizeof(char));
 
-    for (int i = 0; i < mapLength; i++)
+    for (short i = 0; i < mapLength; i++)
     {
         map[i] = (char *) malloc(mapHeight*sizeof(char));
     }
 
-    for (int i = 0; i < mapLength; i++)
+    for (short i = 0; i < mapLength; i++)
     {
-        for (int j = 0; j < mapHeight; j++)
+        for (short j = 0; j < mapHeight; j++)
         {
             map[i][j] = 'a';
         }
     }
     
 
-    for (int i = 0; i < mapLength; i++)
+    for (short i = 0; i < mapLength; i++)
     {
-        for (int j = 0; j < mapHeight; j++)
+        for (short j = 0; j < mapHeight; j++)
         {
             short ehParedeHorizontal = (i == mapFirstLine) || (i == mapHeight - 1);
             if (ehParedeHorizontal)
             {
                 map[i][j] = '-';
+                continue;
             }
 
             short ehParedeVertical = (!ehParedeHorizontal) && (j == mapFirstColumn || j == mapLength - 1);
             if(ehParedeHorizontal){
                 map[i][j] = '|';
+                continue;
             }
 
             short naoEhParede = !ehParedeHorizontal && !ehParedeVertical;
             if (naoEhParede)
             {
-                map[i][j] = '@';
+                map[i][j] = ' ';
+                continue;
             }
         }
     }
