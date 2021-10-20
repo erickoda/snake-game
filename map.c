@@ -38,8 +38,37 @@ void createMap(char **map, MapSizes mapSizes, short mapFirstLine, short mapFirst
     }
 }
 
-void updateMap(char **map, Position food){
-    map[food.positionX][food.positionY] = '*';
+void updateMap(char **map, Position food, Position *snake){
+    map[food.positionY][food.positionX] = '*';
+    map[snake[0].positionY][snake[0].positionX] = '@';
+}
+
+void updateSnakePosition(Position *snake){
+
+    static char newPositionDirection;
+    scanf(" %c", &newPositionDirection);
+    switch (newPositionDirection)
+    {
+        case 'w':
+        case 'W':
+            snake->positionY -= 1;
+            break;
+
+        case 's':
+        case 'S':
+            snake->positionY += 1;
+            break;
+
+        case 'a':
+        case 'A':
+            snake->positionX -= 1;
+            break;
+
+        case 'd':
+        case 'D':
+            snake->positionX += 1;
+            break;
+    }
 }
 
 void printMap(char **map, MapSizes mapSizes){
