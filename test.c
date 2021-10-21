@@ -2,7 +2,11 @@
 
 int main(){
 
-    char greeting[30] = "Hello World\n";
-    printf("%s", greeting);
+    double x = 0.1 + 0.2;
+    if(x == 0.3){
+        printf("CERTO");
+    } else{
+        printf("Errado");
+    }
 
 }

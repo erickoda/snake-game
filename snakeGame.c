@@ -43,5 +43,6 @@ int main(){
     }
 
     free(map);
+    free(snake);
     return 0;
 }

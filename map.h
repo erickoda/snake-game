@@ -3,7 +3,7 @@ typedef struct
     short positionX;
     short positionY;
 
-}Position;
+} Position;
 
 typedef struct
 {
