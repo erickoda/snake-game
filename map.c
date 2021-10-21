@@ -9,7 +9,7 @@ void allocMap(char **map, MapSizes mapSizes){
     }
 }
 
-void createMap(char **map, MapSizes mapSizes, short mapFirstLine, short mapFirstColumn){
+void createMapBoard(char **map, MapSizes mapSizes, short mapFirstLine, short mapFirstColumn){
 
     for (short i = 0; i < mapSizes.Length; i++)
     {
@@ -18,13 +18,13 @@ void createMap(char **map, MapSizes mapSizes, short mapFirstLine, short mapFirst
             short ehParedeHorizontal = (i == mapFirstLine) || (i == mapSizes.Height - 1);
             if (ehParedeHorizontal)
             {
-                map[i][j] = '-';
+                map[i][j] = HORIZONTAL_WALL;
                 continue;
             }
 
             short ehParedeVertical = (!ehParedeHorizontal) && (j == mapFirstColumn || j == mapSizes.Length - 1);
             if(ehParedeVertical){
-                map[i][j] = '|';
+                map[i][j] = VERTICAL_WALL;
                 continue;
             }
 
@@ -38,36 +38,73 @@ void createMap(char **map, MapSizes mapSizes, short mapFirstLine, short mapFirst
     }
 }
 
-void updateMap(char **map, Position food, Position *snake){
+void addCharactersToMap(char **map, Position food, Position *snake){
     map[food.positionY][food.positionX] = '*';
     map[snake[0].positionY][snake[0].positionX] = '@';
 }
 
-void updateSnakePosition(Position *snake){
+void snakeNextPosition(char **map, Position *snake, MapSizes mapSizes, Position food){
 
     static char newPositionDirection;
     scanf(" %c", &newPositionDirection);
+
+    short nextPositionX = snake->positionX;
+    short nextPositionY = snake->positionY;
+
     switch (newPositionDirection)
     {
         case 'w':
         case 'W':
-            snake->positionY -= 1;
+            nextPositionY -= 1;
             break;
 
         case 's':
         case 'S':
-            snake->positionY += 1;
+            nextPositionY += 1;
             break;
 
         case 'a':
         case 'A':
-            snake->positionX -= 1;
+            nextPositionX -= 1;
             break;
 
         case 'd':
         case 'D':
-            snake->positionX += 1;
+            nextPositionX += 1;
             break;
+    }
+
+    short nextPositionIsValid = !(verifyNextPosition(map, nextPositionX, nextPositionY, HORIZONTAL_WALL) 
+                                || verifyNextPosition(map, nextPositionX, nextPositionY, VERTICAL_WALL));
+
+    if(nextPositionIsValid){
+        map[snake->positionY][snake->positionX] = ' ';
+        map[nextPositionY][nextPositionX] = '@';
+
+        snake->positionX = nextPositionX;
+        snake->positionY = nextPositionY;
+    }
+
+}
+
+void changeFoodPosition(char **map, Position food, Position *snake, MapSizes mapSizes){
+
+    short snakeHasEaten = (snake->positionX == food.positionX) && (snake->positionY == food.positionY);
+    if(snakeHasEaten){
+        food.positionX = randowInicialPosition(mapSizes.Length - 1 - 1);
+        food.positionY = randowInicialPosition(mapSizes.Height - 1 - 1);
+        map[food.positionX][food.positionY] = '*';
+        // Deu um problema com o food sepa vou precisar transformar em ponteiro
+    }
+}
+
+short verifyNextPosition(char **map, short nextPositionX, short nextPositionY, char nextChar){
+
+    short nextPositionChar = map[nextPositionY][nextPositionX] == nextChar;
+    if(nextPositionChar){
+        return 1;
+    } else {
+        return 0;
     }
 }
 

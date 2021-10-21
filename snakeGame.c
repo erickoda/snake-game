@@ -12,11 +12,11 @@ int main(){
     /*
         Variables creation and adjustments
     */
+    short mapFirstLine = 0;
+    short mapFirstColumn = 0;
     MapSizes mapSizes;
     mapSizes.Length = 10;
     mapSizes.Height = 10;
-    short mapFirstLine = 0;
-    short mapFirstColumn = 0;
 
     Position *snake;
     snake = (Position *) malloc(sizeof(Position)*(mapSizes.Length-2)*(mapSizes.Height-2));
@@ -34,14 +34,23 @@ int main(){
     /*
         Program Starts here
     */
-    createMap(map, mapSizes, mapFirstLine, mapFirstColumn);
-    
+    createMapBoard(map, mapSizes, mapFirstLine, mapFirstColumn);
+    addCharactersToMap(map, food, snake);
+
     while(1){
-        updateMap(map, food, snake);
         printMap(map, mapSizes);
-        updateSnakePosition(snake);
+        snakeNextPosition(map, snake, mapSizes, food);
+        changeFoodPosition(map, food, snake, mapSizes);
     }
 
+
+    /*
+        Cleaning the program
+    */
+    for (short i = 0; i < mapSizes.Height; i++)
+    {
+        free(map[i]);
+    }
     free(map);
     free(snake);
     return 0;
