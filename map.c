@@ -79,9 +79,11 @@ void snakeNextPosition(char **map, Position *snake){
             break;
     }
 
-    short nextPositionIsValid = !( verifyNextPosition(map, next, HORIZONTAL_WALL) 
-                                || verifyNextPosition(map, next, VERTICAL_WALL) 
-                                || verifyNextPosition(map, next, SNAKE));
+    bool nextPositionIsWall  = (verifyNextPosition(map, next, HORIZONTAL_WALL) 
+                                || verifyNextPosition(map, next, VERTICAL_WALL));
+    bool nextPositionIsSnake = verifyNextPosition(map, next, SNAKE);
+
+    bool nextPositionIsValid = !(nextPositionIsSnake || nextPositionIsWall);
 
     if(nextPositionIsValid){
         map[snake->positionY][snake->positionX] = EMPTY_SPACE;
@@ -104,6 +106,11 @@ void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfo
     if(snakeHasEaten){
         food->positionX = randowInicialPosition(mapInfos.Sizes.Length - 1 - 1);
         food->positionY = randowInicialPosition(mapInfos.Sizes.Height - 1 - 1);
+
+        /*
+            Verificar se a nova posição de food coincide com a snake
+        */
+
         map[food->positionY][food->positionX] = FOOD;
 
         score++;
@@ -113,10 +120,11 @@ void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfo
 void growSnakeLength(char **map, Position *snake){
     for (int i = 8*8; i >=0; i--)
     {   
-        if(i <= score){
+        bool isSnake = (i <= score);
+        if(isSnake){
             map[snake[i].positionY][snake[i].positionX] = SNAKE;
         }else{
-            map[snake[i].positionY][snake[i].positionX] = EMPTY_SPACE;
+            map[snake[i].positionY][snake[i].positionX] = EMPTY_SPACE; //Clean the old space of the snake
         }
     }
 }
