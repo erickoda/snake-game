@@ -41,7 +41,7 @@ int main(){
 
     while(1){
         printMap(map, mapSizes);
-        snakeNextPosition(map, snake, mapSizes, food);
+        snakeNextPosition(map, snake, mapSizes);
         changeFoodPosition(map, &food, snake, mapSizes);
     }
 

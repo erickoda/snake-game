@@ -21,7 +21,7 @@ typedef struct
 void allocMap(char **map, MapSizes mapSizes);
 void createMapBoard(char **map, MapSizes mapSizes, short mapFirstLine, short mapFirstColumn);
 void addCharactersToMap(char **map, Position food, Position *snake);
-void snakeNextPosition(char **map, Position *snake, MapSizes mapSizes, Position food);
+void snakeNextPosition(char **map, Position *snake, MapSizes mapSizes);
 short verifyNextPosition(char **map, short nextPositionX, short nextPositionY, char nextChar);
 void changeFoodPosition(char **map, Position *food, Position *snake, MapSizes mapSizes);
 void printMap(char **map, MapSizes mapSizes);

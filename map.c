@@ -43,7 +43,7 @@ void addCharactersToMap(char **map, Position food, Position *snake){
     map[snake[0].positionY][snake[0].positionX] = '@';
 }
 
-void snakeNextPosition(char **map, Position *snake, MapSizes mapSizes, Position food){
+void snakeNextPosition(char **map, Position *snake, MapSizes mapSizes){
 
     static char newPositionDirection;
     scanf(" %c", &newPositionDirection);
