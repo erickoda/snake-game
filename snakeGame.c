@@ -10,53 +10,50 @@ int main(){
 
     setlocale(LC_ALL, "Portuguese");
     srand(time(NULL));
-    printf("%d", score);
 
 
     /*
         Variables creation and adjustments
     */
-    short mapFirstLine = 0;
-    short mapFirstColumn = 0;
-    MapSizes mapSizes;
-    mapSizes.Length = 10;
-    mapSizes.Height = 10;
+    Map firstMapInfos;
+    firstMapInfos.Sizes.Height = 10;
+    firstMapInfos.Sizes.Length = 10;
+    firstMapInfos.Lines.FirstColumn = 0;
+    firstMapInfos.Lines.FirstLine = 0;
 
     Position *snake;
-    snake = (Position *) malloc(sizeof(Position)*(mapSizes.Length-2)*(mapSizes.Height-2));
-    snake[0].positionX = randowInicialPosition(mapSizes.Length - 1 - 1);
-    snake[0].positionY = randowInicialPosition(mapSizes.Length - 1 - 1);
+    snake = (Position *) malloc(sizeof(Position)*(firstMapInfos.Sizes.Length-2)*(firstMapInfos.Sizes.Height-2));
+    randowCharacterPosition(snake, firstMapInfos);
 
     Position food;
-    food.positionX = randowInicialPosition(mapSizes.Length - 1 - 1);
-    food.positionY = randowInicialPosition(mapSizes.Height - 1 - 1); //Tentar tornar food global
+    randowCharacterPosition(&food, firstMapInfos);
 
-    char **map;
-    map = (char **) malloc(mapSizes.Length*sizeof(char));
-    allocMap(map, mapSizes);
+    char **mapBoard;
+    mapBoard = (char **) malloc(firstMapInfos.Sizes.Length*sizeof(char));
+    allocMap(mapBoard, firstMapInfos);
 
 
     /*
         Program Starts here
     */
-    createMapBoard(map, mapSizes, mapFirstLine, mapFirstColumn);
-    addCharactersToMap(map, food, snake);
+    createMapBoard(mapBoard, &firstMapInfos);
+    addCharactersToMap(mapBoard, food, snake);
 
     while(1){
-        printMap(map, mapSizes);
-        snakeNextPosition(map, snake, mapSizes);
-        changeFoodPosition(map, &food, snake, mapSizes);
+        printMap(mapBoard, firstMapInfos);
+        snakeNextPosition(mapBoard, snake);
+        changeFoodPosition(mapBoard, &food, snake, firstMapInfos);
     }
 
 
     /*
         Cleaning the program
     */
-    for (short i = 0; i < mapSizes.Height; i++)
+    for (short i = 0; i < firstMapInfos.Sizes.Height; i++)
     {
-        free(map[i]);
+        free(mapBoard[i]);
     }
-    free(map);
+    free(mapBoard);
     free(snake);
     return 0;
 }

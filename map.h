@@ -3,6 +3,9 @@
 
 #define HORIZONTAL_WALL '-'
 #define VERTICAL_WALL '|'
+#define EMPTY_SPACE ' '
+#define SNAKE '@'
+#define FOOD '*'
 
 typedef struct
 {
@@ -27,19 +30,21 @@ typedef struct
 
 typedef struct
 {
+
     MapSizes Sizes;
     MapLines Lines;
 
 }Map;
 
 
-void allocMap(char **map, MapSizes mapSizes);
-void createMapBoard(char **map, MapSizes mapSizes, short mapFirstLine, short mapFirstColumn);
+void allocMap(char **map, Map mapInfos);
+void createMapBoard(char **mapBoard, Map *mapInfos);
 void addCharactersToMap(char **map, Position food, Position *snake);
-void snakeNextPosition(char **map, Position *snake, MapSizes mapSizes);
+void snakeNextPosition(char **map, Position *snake);
 short verifyNextPosition(char **map, short nextPositionX, short nextPositionY, char nextChar);
-void changeFoodPosition(char **map, Position *food, Position *snake, MapSizes mapSizes);
-void printMap(char **map, MapSizes mapSizes);
+void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfos);
+void printMap(char **map, Map mapInfos);
 short randowInicialPosition(short maxPosition);
+void randowCharacterPosition(Position *character, Map mapInfos);
 
 #endif
