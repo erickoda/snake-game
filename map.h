@@ -47,5 +47,6 @@ void printMap(char **map, Map mapInfos);
 short randowInicialPosition(short maxPosition);
 void randowCharacterPosition(Position *character, Map mapInfos);
 void growSnakeLength(char **map, Position *snake);
+void createNewFood(char **map, Position *food, Map mapInfos);
 
 #endif

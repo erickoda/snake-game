@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include "map.h"
 
-int score;
+int snakeLength;
 
 int main(){
 
