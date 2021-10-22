@@ -9,6 +9,7 @@ int main(){
     setlocale(LC_ALL, "Portuguese");
     srand(time(NULL));
 
+
     /*
         Variables creation and adjustments
     */
@@ -25,11 +26,12 @@ int main(){
 
     Position food;
     food.positionX = randowInicialPosition(mapSizes.Length - 1 - 1);
-    food.positionY = randowInicialPosition(mapSizes.Height - 1 - 1);
+    food.positionY = randowInicialPosition(mapSizes.Height - 1 - 1); //Tentar tornar food global
 
     char **map;
     map = (char **) malloc(mapSizes.Length*sizeof(char));
     allocMap(map, mapSizes);
+
 
     /*
         Program Starts here
@@ -40,7 +42,7 @@ int main(){
     while(1){
         printMap(map, mapSizes);
         snakeNextPosition(map, snake, mapSizes, food);
-        changeFoodPosition(map, food, snake, mapSizes);
+        changeFoodPosition(map, &food, snake, mapSizes);
     }
 
 

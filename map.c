@@ -87,14 +87,13 @@ void snakeNextPosition(char **map, Position *snake, MapSizes mapSizes, Position 
 
 }
 
-void changeFoodPosition(char **map, Position food, Position *snake, MapSizes mapSizes){
+void changeFoodPosition(char **map, Position *food, Position *snake, MapSizes mapSizes){
 
-    short snakeHasEaten = (snake->positionX == food.positionX) && (snake->positionY == food.positionY);
+    short snakeHasEaten = (snake->positionX == food->positionX) && (snake->positionY == food->positionY);
     if(snakeHasEaten){
-        food.positionX = randowInicialPosition(mapSizes.Length - 1 - 1);
-        food.positionY = randowInicialPosition(mapSizes.Height - 1 - 1);
-        map[food.positionX][food.positionY] = '*';
-        // Deu um problema com o food sepa vou precisar transformar em ponteiro
+        food->positionX = randowInicialPosition(mapSizes.Length - 1 - 1);
+        food->positionY = randowInicialPosition(mapSizes.Height - 1 - 1);
+        map[food->positionY][food->positionX] = '*';
     }
 }
 
