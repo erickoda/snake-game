@@ -18,6 +18,21 @@ typedef struct
 
 } MapSizes;
 
+typedef struct
+{
+    short FirstLine;
+    short FirstColumn;
+
+} MapLines;
+
+typedef struct
+{
+    MapSizes Sizes;
+    MapLines Lines;
+
+}Map;
+
+
 void allocMap(char **map, MapSizes mapSizes);
 void createMapBoard(char **map, MapSizes mapSizes, short mapFirstLine, short mapFirstColumn);
 void addCharactersToMap(char **map, Position food, Position *snake);
