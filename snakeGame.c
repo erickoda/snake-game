@@ -43,6 +43,7 @@ int main(){
         printMap(mapBoard, firstMapInfos);
         snakeNextPosition(mapBoard, snake);
         changeFoodPosition(mapBoard, &food, snake, firstMapInfos);
+        upSnakeLength(mapBoard, snake);
     }
 
 
@@ -57,3 +58,5 @@ int main(){
     free(snake);
     return 0;
 }
+
+//Tentar fzer um "histórico" de posição da cobra

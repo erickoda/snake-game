@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "map.h"
 
-extern int score;
+extern int score;  
 
 void allocMap(char **map, Map mapInfos){
     for (short i = 0; i < mapInfos.Sizes.Length; i++)
@@ -50,45 +50,53 @@ void snakeNextPosition(char **map, Position *snake){
     static char newPositionDirection;
     scanf(" %c", &newPositionDirection);
 
-    short nextPositionX = snake->positionX;
-    short nextPositionY = snake->positionY;
+    Position next;
+
+    next.positionX = snake->positionX;
+    next.positionY = snake->positionY;
 
     switch (newPositionDirection)
     {
         case 'w':
         case 'W':
-            nextPositionY -= 1;
+            next.positionY -= 1;
             break;
 
         case 's':
         case 'S':
-            nextPositionY += 1;
+            next.positionY += 1;
             break;
 
         case 'a':
         case 'A':
-            nextPositionX -= 1;
+            next.positionX -= 1;
             break;
 
         case 'd':
         case 'D':
-            nextPositionX += 1;
+            next.positionX += 1;
             break;
     }
 
-    short nextPositionIsValid = !(verifyNextPosition(map, nextPositionX, nextPositionY, HORIZONTAL_WALL) 
-                                || verifyNextPosition(map, nextPositionX, nextPositionY, VERTICAL_WALL));
+    short nextPositionIsValid = !(verifyNextPosition(map, next, HORIZONTAL_WALL) 
+                                || verifyNextPosition(map, next, VERTICAL_WALL));
 
     if(nextPositionIsValid){
         map[snake->positionY][snake->positionX] = EMPTY_SPACE;
-        map[nextPositionY][nextPositionX] = SNAKE;
+        map[next.positionY][next.positionX] = SNAKE;
 
-        snake->positionX = nextPositionX;
-        snake->positionY = nextPositionY;
+        for (int i = 1; i < 8*8; i++)
+        {
+            snake[i].positionX = snake[i-1].positionX;
+            snake[i].positionY = snake[i-1].positionY;
+        }
+
+        snake->positionX = next.positionX;
+        snake->positionY = next.positionY;
     }
 }
 
-void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfos){
+void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfos){upSnakeLength(map, snake);
 
     short snakeHasEaten = (snake->positionX == food->positionX) && (snake->positionY == food->positionY);
     if(snakeHasEaten){
@@ -100,9 +108,20 @@ void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfo
     }
 }
 
-short verifyNextPosition(char **map, short nextPositionX, short nextPositionY, char nextChar){
+void upSnakeLength(char **map, Position *snake){
+    for (int i = 0; i < 8*8; i++)
+    {   
+        if(i <= score){
+            map[snake[i].positionY][snake[i].positionX] = '@';
+        // }else{
+        //     map[snake[i].positionY][snake[i].positionX] = ' ';
+        }
+    }
+}
 
-    short nextPositionChar = map[nextPositionY][nextPositionX] == nextChar;
+short verifyNextPosition(char **map, Position next, char nextChar){
+
+    short nextPositionChar = map[next.positionY][next.positionX] == nextChar;
     if(nextPositionChar){
         return 1;
     } else {
