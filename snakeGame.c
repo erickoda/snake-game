@@ -4,10 +4,13 @@
 #include <time.h>
 #include "map.h"
 
+int score;
+
 int main(){
 
     setlocale(LC_ALL, "Portuguese");
     srand(time(NULL));
+    printf("%d", score);
 
 
     /*

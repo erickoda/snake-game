@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include "map.h"
 
+extern int score;
+
 void allocMap(char **map, MapSizes mapSizes){
     for (short i = 0; i < mapSizes.Length; i++)
     {
@@ -36,6 +38,7 @@ void createMapBoard(char **map, MapSizes mapSizes, short mapFirstLine, short map
             }
         }
     }
+    printf("%d", score);
 }
 
 void addCharactersToMap(char **map, Position food, Position *snake){
