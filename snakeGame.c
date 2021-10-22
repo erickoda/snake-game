@@ -22,7 +22,7 @@ int main(){
     firstMapInfos.Lines.FirstLine = 0;
 
     Position *snake;
-    snake = (Position *) malloc(sizeof(Position)*(firstMapInfos.Sizes.Length-2)*(firstMapInfos.Sizes.Height-2));
+    snake = (Position *) calloc(sizeof(Position),(firstMapInfos.Sizes.Length-2)*(firstMapInfos.Sizes.Height-2));
     randowCharacterPosition(snake, firstMapInfos);
 
     Position food;
@@ -43,7 +43,7 @@ int main(){
         printMap(mapBoard, firstMapInfos);
         snakeNextPosition(mapBoard, snake);
         changeFoodPosition(mapBoard, &food, snake, firstMapInfos);
-        upSnakeLength(mapBoard, snake);
+        growSnakeLength(mapBoard, snake);
     }
 
 

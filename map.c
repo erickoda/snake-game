@@ -79,14 +79,15 @@ void snakeNextPosition(char **map, Position *snake){
             break;
     }
 
-    short nextPositionIsValid = !(verifyNextPosition(map, next, HORIZONTAL_WALL) 
-                                || verifyNextPosition(map, next, VERTICAL_WALL));
+    short nextPositionIsValid = !( verifyNextPosition(map, next, HORIZONTAL_WALL) 
+                                || verifyNextPosition(map, next, VERTICAL_WALL) 
+                                || verifyNextPosition(map, next, SNAKE));
 
     if(nextPositionIsValid){
         map[snake->positionY][snake->positionX] = EMPTY_SPACE;
         map[next.positionY][next.positionX] = SNAKE;
 
-        for (int i = 1; i < 8*8; i++)
+        for (int i = 8*8 - 1; i > 0; i--)
         {
             snake[i].positionX = snake[i-1].positionX;
             snake[i].positionY = snake[i-1].positionY;
@@ -97,7 +98,7 @@ void snakeNextPosition(char **map, Position *snake){
     }
 }
 
-void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfos){upSnakeLength(map, snake);
+void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfos){
 
     bool snakeHasEaten = (snake->positionX == food->positionX) && (snake->positionY == food->positionY);
     if(snakeHasEaten){
@@ -109,13 +110,13 @@ void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfo
     }
 }
 
-void upSnakeLength(char **map, Position *snake){
-    for (int i = 0; i < 8*8; i++)
+void growSnakeLength(char **map, Position *snake){
+    for (int i = 8*8; i >=0; i--)
     {   
         if(i <= score){
-            map[snake[i].positionY][snake[i].positionX] = '@';
-        // }else{
-        //     map[snake[i].positionY][snake[i].positionX] = ' ';
+            map[snake[i].positionY][snake[i].positionX] = SNAKE;
+        }else{
+            map[snake[i].positionY][snake[i].positionX] = EMPTY_SPACE;
         }
     }
 }
