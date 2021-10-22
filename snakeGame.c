@@ -33,7 +33,6 @@ int main(){
     char **mapBoard;
     mapBoard = (char **) malloc(firstMapInfos.Sizes.Length*sizeof(char*));
     allocMap(mapBoard, &firstMapInfos);
-    printf("memoria %ld\n", firstMapInfos.Sizes.Height*sizeof(char));
 
 
     /*
@@ -44,12 +43,11 @@ int main(){
 
     do{
         printMap(mapBoard, firstMapInfos);
-        snakesStillAlive = snakeNextPosition(mapBoard, snake);
-        changeFoodPosition(mapBoard, &food, snake, firstMapInfos);
-        growSnakeLength(mapBoard, snake);
+        snakesStillAlive = 
+        snakeNextPosition(mapBoard, snake);
+        changeFoodPositionAndGrowSnakeLength(mapBoard, &food, snake, firstMapInfos);
     }while(snakesStillAlive);
 
-    printf("%ld\n", strlen(mapBoard[0]));
 
     /*
         Cleaning the memory

@@ -106,19 +106,23 @@ bool snakeNextPosition(char **map, Position *snake){
     }
 
     else if(nextPositionIsSnake){
-        return true;
+        return false;
     }
 }
 
-void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfos){
+void changeFoodPositionAndGrowSnakeLength(char **map, Position *food, Position *snake, Map mapInfos){
 
     bool snakeHasEaten = (snake->positionX == food->positionX) && (snake->positionY == food->positionY);
     if(snakeHasEaten){
 
-        createNewFood(map, food, mapInfos);
-
         snakeLength++;
+
+        growSnakeLength(map, snake);
+
+        createNewFood(map, food, mapInfos);
+        return;
     }
+    growSnakeLength(map, snake);
 }
 
 void createNewFood(char **map, Position *food, Map mapInfos){
@@ -126,9 +130,7 @@ void createNewFood(char **map, Position *food, Map mapInfos){
     randowCharacterPosition(food, mapInfos);
 
     bool positionHasSnake = map[food->positionY][food->positionX] == SNAKE;
-    printf("%d %d\n", food->positionY, food->positionX);
     if(positionHasSnake){
-        printf("\nhmm\n");
         createNewFood(map, food, mapInfos);
     }
 

@@ -42,7 +42,7 @@ void createMapBoard(char **mapBoard, Map *mapInfos);
 void addCharactersToMap(char **map, Position food, Position *snake);
 bool snakeNextPosition(char **map, Position *snake);
 short verifyNextPosition(char **map, Position next, char nextChar);
-void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfos);
+void changeFoodPositionAndGrowSnakeLength(char **map, Position *food, Position *snake, Map mapInfos);
 void printMap(char **map, Map mapInfos);
 short randowInicialPosition(short maxPosition);
 void randowCharacterPosition(Position *character, Map mapInfos);
