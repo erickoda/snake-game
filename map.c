@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "map.h"
 
 extern int score;  
@@ -17,20 +18,20 @@ void createMapBoard(char **mapBoard, Map *mapInfos){
     {
         for (short j = 0; j < mapInfos->Sizes.Height; j++)
         {
-            short ehParedeHorizontal = (i == mapInfos->Lines.FirstLine) || (i == mapInfos->Sizes.Height - 1);
+            bool ehParedeHorizontal = (i == mapInfos->Lines.FirstLine) || (i == mapInfos->Sizes.Height - 1);
             if (ehParedeHorizontal)
             {
                 mapBoard[i][j] = HORIZONTAL_WALL;
                 continue;
             }
 
-            short ehParedeVertical = (!ehParedeHorizontal) && (j == mapInfos->Lines.FirstColumn || j == mapInfos->Sizes.Length - 1);
+            bool ehParedeVertical = (!ehParedeHorizontal) && (j == mapInfos->Lines.FirstColumn || j == mapInfos->Sizes.Length - 1);
             if(ehParedeVertical){
                 mapBoard[i][j] = VERTICAL_WALL;
                 continue;
             }
 
-            short naoEhParede = !ehParedeHorizontal && !ehParedeVertical;
+            bool naoEhParede = !ehParedeHorizontal && !ehParedeVertical;
             if (naoEhParede)
             {
                 mapBoard[i][j] = EMPTY_SPACE;
@@ -98,7 +99,7 @@ void snakeNextPosition(char **map, Position *snake){
 
 void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfos){upSnakeLength(map, snake);
 
-    short snakeHasEaten = (snake->positionX == food->positionX) && (snake->positionY == food->positionY);
+    bool snakeHasEaten = (snake->positionX == food->positionX) && (snake->positionY == food->positionY);
     if(snakeHasEaten){
         food->positionX = randowInicialPosition(mapInfos.Sizes.Length - 1 - 1);
         food->positionY = randowInicialPosition(mapInfos.Sizes.Height - 1 - 1);
@@ -121,8 +122,8 @@ void upSnakeLength(char **map, Position *snake){
 
 short verifyNextPosition(char **map, Position next, char nextChar){
 
-    short nextPositionChar = map[next.positionY][next.positionX] == nextChar;
-    if(nextPositionChar){
+    bool nextPositionIsChar = map[next.positionY][next.positionX] == nextChar;
+    if(nextPositionIsChar){
         return 1;
     } else {
         return 0;

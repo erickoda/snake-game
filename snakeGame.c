@@ -48,7 +48,7 @@ int main(){
 
 
     /*
-        Cleaning the program
+        Cleaning the memory
     */
     for (short i = 0; i < firstMapInfos.Sizes.Height; i++)
     {
