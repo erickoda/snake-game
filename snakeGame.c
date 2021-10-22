@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <time.h>
+#include <string.h>
+#include <stdbool.h>
 #include "map.h"
 
 int score;
@@ -10,7 +12,7 @@ int main(){
 
     setlocale(LC_ALL, "Portuguese");
     srand(time(NULL));
-
+    bool snakesStillAlive = true;
 
     /*
         Variables creation and adjustments
@@ -29,8 +31,9 @@ int main(){
     randowCharacterPosition(&food, firstMapInfos);
 
     char **mapBoard;
-    mapBoard = (char **) malloc(firstMapInfos.Sizes.Length*sizeof(char));
-    allocMap(mapBoard, firstMapInfos);
+    mapBoard = (char **) malloc(firstMapInfos.Sizes.Length*sizeof(char*));
+    allocMap(mapBoard, &firstMapInfos);
+    printf("memoria %ld\n", firstMapInfos.Sizes.Height*sizeof(char));
 
 
     /*
@@ -39,18 +42,19 @@ int main(){
     createMapBoard(mapBoard, &firstMapInfos);
     addCharactersToMap(mapBoard, food, snake);
 
-    while(1){
+    do{
         printMap(mapBoard, firstMapInfos);
-        snakeNextPosition(mapBoard, snake);
+        snakesStillAlive = snakeNextPosition(mapBoard, snake);
         changeFoodPosition(mapBoard, &food, snake, firstMapInfos);
         growSnakeLength(mapBoard, snake);
-    }
+    }while(snakesStillAlive);
 
+    printf("%ld\n", strlen(mapBoard[0]));
 
     /*
         Cleaning the memory
     */
-    for (short i = 0; i < firstMapInfos.Sizes.Height; i++)
+    for (int i = 0; i < firstMapInfos.Sizes.Height; i++)
     {
         free(mapBoard[i]);
     }
@@ -58,5 +62,3 @@ int main(){
     free(snake);
     return 0;
 }
-
-//Tentar fzer um "histórico" de posição da cobra

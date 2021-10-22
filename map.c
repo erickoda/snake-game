@@ -5,10 +5,10 @@
 
 extern int score;  
 
-void allocMap(char **map, Map mapInfos){
-    for (short i = 0; i < mapInfos.Sizes.Length; i++)
+void allocMap(char **map, Map *mapInfos){
+    for (short i = 0; i < mapInfos->Sizes.Length; i++)
     {
-        map[i] = (char *) malloc(mapInfos.Sizes.Height*sizeof(char));
+        map[i] = (char *) malloc(mapInfos->Sizes.Height*sizeof(char));
     }
 }
 
@@ -46,7 +46,7 @@ void addCharactersToMap(char **map, Position food, Position *snake){
     map[snake[0].positionY][snake[0].positionX] = SNAKE;
 }
 
-void snakeNextPosition(char **map, Position *snake){
+bool snakeNextPosition(char **map, Position *snake){
 
     static char newPositionDirection;
     scanf(" %c", &newPositionDirection);
@@ -97,6 +97,16 @@ void snakeNextPosition(char **map, Position *snake){
 
         snake->positionX = next.positionX;
         snake->positionY = next.positionY;
+
+        return true;
+    }
+
+    else if(nextPositionIsWall){
+        return false;
+    }
+
+    else if(nextPositionIsSnake){
+        return false;
     }
 }
 
@@ -107,9 +117,12 @@ void changeFoodPosition(char **map, Position *food, Position *snake, Map mapInfo
         food->positionX = randowInicialPosition(mapInfos.Sizes.Length - 1 - 1);
         food->positionY = randowInicialPosition(mapInfos.Sizes.Height - 1 - 1);
 
-        /*
-            Verificar se a nova posição de food coincide com a snake
-        */
+        bool positionHasSnake = map[food->positionY][food->positionX] == SNAKE;
+        printf("%d %d\n", food->positionY, food->positionX);
+        if(positionHasSnake){
+            printf("\nhm\n");
+            changeFoodPosition(map, food, snake, mapInfos);
+        }
 
         map[food->positionY][food->positionX] = FOOD;
 
@@ -123,7 +136,7 @@ void growSnakeLength(char **map, Position *snake){
         bool isSnake = (i <= score);
         if(isSnake){
             map[snake[i].positionY][snake[i].positionX] = SNAKE;
-        }else{
+        }else if (i = score+1){
             map[snake[i].positionY][snake[i].positionX] = EMPTY_SPACE; //Clean the old space of the snake
         }
     }
