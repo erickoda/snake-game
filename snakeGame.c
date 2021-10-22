@@ -12,7 +12,7 @@ int main(){
 
     setlocale(LC_ALL, "Portuguese");
     srand(time(NULL));
-    bool snakesStillAlive = true;
+    bool snakesStillsAlive = true;
 
     /*
         Variables creation and adjustments
@@ -43,10 +43,10 @@ int main(){
 
     do{
         printMap(mapBoard, firstMapInfos);
-        snakesStillAlive = 
+        snakesStillsAlive = 
         snakeNextPosition(mapBoard, snake);
         changeFoodPositionAndGrowSnakeLength(mapBoard, &food, snake, firstMapInfos);
-    }while(snakesStillAlive);
+    }while(snakesStillsAlive);
 
 
     /*
