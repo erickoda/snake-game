@@ -47,10 +47,9 @@ void addCharactersToMap(char **map, Position food, Position *snake){
     map[snake[0].positionY][snake[0].positionX] = SNAKE;
 }
 
-bool snakeNextPosition(char **map, Position *snake){
+bool getSnakeNextPosition(char **map, Position *snake){
 
     static char newPositionDirection;
-    printf("%c", newPositionDirection);
 
     if(_kbhit()){
         newPositionDirection = getch();
@@ -91,8 +90,8 @@ bool snakeNextPosition(char **map, Position *snake){
     bool nextPositionIsValid = !(nextPositionIsSnake || nextPositionIsWall);
 
     if(nextPositionIsValid){
-        map[snake->positionY][snake->positionX] = EMPTY_SPACE;
-        map[next.positionY][next.positionX] = SNAKE;
+        // map[snake->positionY][snake->positionX] = EMPTY_SPACE;
+        // map[next.positionY][next.positionX] = SNAKE_HEAD;
 
         for (int i = 8*8 - 1; i > 0; i--)
         {
@@ -144,7 +143,7 @@ void createNewFood(char **map, Position *food, Map mapInfos){
 }
 
 void growSnakeLength(char **map, Position *snake){
-    for (int i = 8*8; i >=0; i--)
+    for (int i = 8*8; i > 0; i--)
     {   
         bool isSnake = (i <= snakeLength);
         if(isSnake){
@@ -153,6 +152,7 @@ void growSnakeLength(char **map, Position *snake){
             map[snake[i].positionY][snake[i].positionX] = EMPTY_SPACE; //Clean the old space of the snake
         }
     }
+    map[snake[0].positionY][snake[0].positionX] = SNAKE_HEAD;
 }
 
 short verifyNextPosition(char **map, Position next, char nextChar){

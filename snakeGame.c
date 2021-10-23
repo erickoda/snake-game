@@ -18,8 +18,8 @@ int main(){
         Variables creation and adjustments
     */
     Map firstMapInfos;
-    firstMapInfos.Sizes.Height = 10;
-    firstMapInfos.Sizes.Length = 10;
+    firstMapInfos.Sizes.Height = 15;
+    firstMapInfos.Sizes.Length = 15;
     firstMapInfos.Lines.FirstColumn = 0;
     firstMapInfos.Lines.FirstLine = 0;
 
@@ -45,7 +45,7 @@ int main(){
         system("cls");
         printMap(mapBoard, firstMapInfos);
         snakesStillsAlive = 
-        snakeNextPosition(mapBoard, snake);
+        getSnakeNextPosition(mapBoard, snake);
         changeFoodPositionAndGrowSnakeLength(mapBoard, &food, snake, firstMapInfos);
         Sleep(100);
     }while(snakesStillsAlive);

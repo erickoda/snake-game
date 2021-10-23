@@ -5,6 +5,7 @@
 #define VERTICAL_WALL '|'
 #define EMPTY_SPACE ' '
 #define SNAKE '@'
+#define SNAKE_HEAD 'O'
 #define FOOD '*'
 
 typedef struct
@@ -40,7 +41,7 @@ typedef struct
 void allocMap(char **map, Map *mapInfos);
 void createMapBoard(char **mapBoard, Map *mapInfos);
 void addCharactersToMap(char **map, Position food, Position *snake);
-bool snakeNextPosition(char **map, Position *snake);
+bool getSnakeNextPosition(char **map, Position *snake);
 short verifyNextPosition(char **map, Position next, char nextChar);
 void changeFoodPositionAndGrowSnakeLength(char **map, Position *food, Position *snake, Map mapInfos);
 void printMap(char **map, Map mapInfos);
