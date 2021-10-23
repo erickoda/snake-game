@@ -4,8 +4,12 @@
 #include <time.h>
 #include <stdbool.h>
 #include <Windows.h>
-#include "map.h"
 
+#include "./map/map.h"
+#include "./opening_end/opening.h"
+#include "./opening_end/end.h"
+
+Map firstMapInfos;
 int snakeLength;
 
 int main(){
@@ -14,10 +18,10 @@ int main(){
     srand(time(NULL));
     bool snakesStillsAlive = true;
 
+
     /*
         Variables creation and adjustments
     */
-    Map firstMapInfos;
     firstMapInfos.Sizes.Height = 15;
     firstMapInfos.Sizes.Length = 15;
     firstMapInfos.Lines.FirstColumn = 0;
@@ -38,6 +42,10 @@ int main(){
     /*
         Program Starts here
     */
+    printOpeningTitle();
+    int gameDifficulty = chooseGameDifficulty();
+    int won = false;
+
     createMapBoard(mapBoard, &firstMapInfos);
     addCharactersToMap(mapBoard, food, snake);
 
@@ -47,8 +55,15 @@ int main(){
         snakesStillsAlive = 
         getSnakeNextPosition(mapBoard, snake);
         changeFoodPositionAndGrowSnakeLength(mapBoard, &food, snake, firstMapInfos);
-        Sleep(100);
-    }while(snakesStillsAlive);
+        Sleep(gameDifficulty*33);
+
+        if(snakeLength == (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Length-1-1) - 1){
+            won = true;
+        }
+
+    }while(snakesStillsAlive && !won);
+
+    endText();
 
 
     /*

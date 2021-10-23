@@ -1,2 +1,6 @@
+#executables
 *.exe
 snakeGame
+
+#future project
+/src/linux/

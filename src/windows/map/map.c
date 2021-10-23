@@ -1,42 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <unistd.h>
-#include "mapLinux.h"
+#include <conio.h>
+#include "map.h"
 
-#include <sys/select.h>
-#include <termios.h>
-#include <fcntl.h>
-
-extern int snakeLength;
-
-
-int _kbhit(void)
-{
-  struct termios oldt, newt;
-  int ch;
-  int oldf;
- 
-  tcgetattr(STDIN_FILENO, &oldt);
-  newt = oldt;
-  newt.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
- 
-  ch = getchar();
- 
-  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-  fcntl(STDIN_FILENO, F_SETFL, oldf);
- 
-  if(ch != EOF)
-  {
-    ungetc(ch, stdin);
-    return 1;
-  }
- 
-  return 0;
-}
+extern int snakeLength;  
+extern Map firstMapInfos;
 
 void allocMap(char **map, Map *mapInfos){
     for (short i = 0; i < mapInfos->Sizes.Length; i++)
@@ -81,25 +50,10 @@ void addCharactersToMap(char **map, Position food, Position *snake){
 
 bool getSnakeNextPosition(char **map, Position *snake){
 
-    struct termios old_tio, new_tio;
-	unsigned char c;
-
-    /* get the terminal settings for stdin */
-    tcgetattr(STDIN_FILENO,&old_tio);
-
-    /* we want to keep the old setting to restore them a the end */
-    new_tio=old_tio;
-
-    /* disable canonical mode (buffered i/o) and local echo */
-    new_tio.c_lflag &=(~ICANON & ~ECHO);
-
-    /* set the new settings immediately */
-    tcsetattr(STDIN_FILENO,TCSANOW,&new_tio);
-
     static char newPositionDirection;
 
     if(_kbhit()){
-        newPositionDirection = getchar();
+        newPositionDirection = getch();
     }
 
     Position next;
@@ -140,7 +94,7 @@ bool getSnakeNextPosition(char **map, Position *snake){
 
     if(nextPositionIsValid){
 
-        for (int i = 8*8 - 1; i > 0; i--)
+        for (int i = (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Length-1-1) - 1; i > 0; i--)
         {
             snake[i].positionX = snake[i-1].positionX;
             snake[i].positionY = snake[i-1].positionY;
@@ -152,16 +106,45 @@ bool getSnakeNextPosition(char **map, Position *snake){
         return true;
     }
 
-    else if(nextPositionIsWall){
+    if(nextPositionIsWall){
+        for (int i = (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Length-1-1) - 1; i > 0; i--) //ajustar o valor inicial do for
+        {
+            snake[i].positionX = snake[i-1].positionX;
+            snake[i].positionY = snake[i-1].positionY;
+        }
+
+        snakeTeleports(map, snake, next);   
         return true;
     }
 
-    else if(nextPositionIsSnake){
-        return true;
+    if(nextPositionIsSnake){
+        return false;
+    }
+}
+
+void snakeTeleports(char **map, Position *snake, Position next){
+    
+    bool nextPositionIsHorizontal_TopWall = verifyNextPosition(map, next, HORIZONTAL_WALL) && (next.positionY == firstMapInfos.Lines.FirstLine);
+    if(nextPositionIsHorizontal_TopWall){
+        snake->positionY = firstMapInfos.Sizes.Height-1-1;
+        return;
+    }
+    bool nextPositionIsHorizontal_BottomWall = verifyNextPosition(map, next, HORIZONTAL_WALL) && (next.positionY == firstMapInfos.Sizes.Height-1);
+    if(nextPositionIsHorizontal_BottomWall){
+        snake->positionY = firstMapInfos.Lines.FirstLine + 1;
+        return;
     }
 
-    tcsetattr(STDIN_FILENO,TCSANOW,&old_tio);
-
+    bool nextPositionIsVertical_RightWall = verifyNextPosition(map, next, VERTICAL_WALL) && (next.positionX == firstMapInfos.Lines.FirstLine);
+    if(nextPositionIsVertical_RightWall){
+        snake->positionX = firstMapInfos.Sizes.Height-1-1;
+        return;
+    }
+    bool nextPositionIsVertical_LeftWall = verifyNextPosition(map, next, VERTICAL_WALL) && (next.positionX == firstMapInfos.Sizes.Length-1);
+    if(nextPositionIsVertical_LeftWall){
+        snake->positionX = firstMapInfos.Lines.FirstLine + 1;
+        return;
+    }
 }
 
 void changeFoodPositionAndGrowSnakeLength(char **map, Position *food, Position *snake, Map mapInfos){
@@ -184,7 +167,9 @@ void createNewFood(char **map, Position *food, Map mapInfos){
     randowCharacterPosition(food, mapInfos);
 
     bool positionHasSnake = map[food->positionY][food->positionX] == SNAKE;
+    printf(" %d %d \n", food->positionY, food->positionX);
     if(positionHasSnake){
+        printf("hmm");
         createNewFood(map, food, mapInfos);
     }
 
@@ -193,12 +178,12 @@ void createNewFood(char **map, Position *food, Map mapInfos){
 }
 
 void growSnakeLength(char **map, Position *snake){
-    for (int i = 8*8; i > 0; i--)
+    for (int i = snakeLength + 1; i >= 0; i--)//Lembrar de finalizar o jogo antes do snakeLength estourar isso ak
     {   
         bool isSnake = (i <= snakeLength);
         if(isSnake){
             map[snake[i].positionY][snake[i].positionX] = SNAKE;
-        }else if (i = snakeLength+1){
+        }else {
             map[snake[i].positionY][snake[i].positionX] = EMPTY_SPACE; //Clean the old space of the snake
         }
     }
