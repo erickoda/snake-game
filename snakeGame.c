@@ -3,6 +3,7 @@
 #include <locale.h>
 #include <time.h>
 #include <stdbool.h>
+#include <Windows.h>
 #include "map.h"
 
 int snakeLength;
@@ -41,10 +42,12 @@ int main(){
     addCharactersToMap(mapBoard, food, snake);
 
     do{
+        system("cls");
         printMap(mapBoard, firstMapInfos);
         snakesStillsAlive = 
         snakeNextPosition(mapBoard, snake);
         changeFoodPositionAndGrowSnakeLength(mapBoard, &food, snake, firstMapInfos);
+        Sleep(100);
     }while(snakesStillsAlive);
 
 

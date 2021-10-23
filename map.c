@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <conio.h>
 #include "map.h"
 
 extern int snakeLength;  
@@ -49,7 +50,11 @@ void addCharactersToMap(char **map, Position food, Position *snake){
 bool snakeNextPosition(char **map, Position *snake){
 
     static char newPositionDirection;
-    scanf(" %c", &newPositionDirection);
+    printf("%c", newPositionDirection);
+
+    if(_kbhit()){
+        newPositionDirection = getch();
+    }
 
     Position next;
 
@@ -106,7 +111,7 @@ bool snakeNextPosition(char **map, Position *snake){
     }
 
     else if(nextPositionIsSnake){
-        return false;
+        return true;
     }
 }
 
