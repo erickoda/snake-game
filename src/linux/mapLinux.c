@@ -1,10 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <conio.h>
-#include "map.h"
+#include <unistd.h>
+#include "mapLinux.h"
 
-extern int snakeLength;  
+#include <sys/select.h>
+#include <termios.h>
+#include <fcntl.h>
+
+extern int snakeLength;
+
+
+int _kbhit(void)
+{
+  struct termios oldt, newt;
+  int ch;
+  int oldf;
+ 
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+ 
+  ch = getchar();
+ 
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  fcntl(STDIN_FILENO, F_SETFL, oldf);
+ 
+  if(ch != EOF)
+  {
+    ungetc(ch, stdin);
+    return 1;
+  }
+ 
+  return 0;
+}
 
 void allocMap(char **map, Map *mapInfos){
     for (short i = 0; i < mapInfos->Sizes.Length; i++)
@@ -19,21 +51,21 @@ void createMapBoard(char **mapBoard, Map *mapInfos){
     {
         for (short j = 0; j < mapInfos->Sizes.Height; j++)
         {
-            bool ehParedeHorizontal = (i == mapInfos->Lines.FirstLine) || (i == mapInfos->Sizes.Height - 1);
-            if (ehParedeHorizontal)
+            bool isHorizontalWall = (i == mapInfos->Lines.FirstLine) || (i == mapInfos->Sizes.Height - 1);
+            if (isHorizontalWall)
             {
                 mapBoard[i][j] = HORIZONTAL_WALL;
                 continue;
             }
 
-            bool ehParedeVertical = (!ehParedeHorizontal) && (j == mapInfos->Lines.FirstColumn || j == mapInfos->Sizes.Length - 1);
-            if(ehParedeVertical){
+            bool isVerticalWall = (!isHorizontalWall) && (j == mapInfos->Lines.FirstColumn || j == mapInfos->Sizes.Length - 1);
+            if(isVerticalWall){
                 mapBoard[i][j] = VERTICAL_WALL;
                 continue;
             }
 
-            bool naoEhParede = !ehParedeHorizontal && !ehParedeVertical;
-            if (naoEhParede)
+            bool isNotWall = !isHorizontalWall && !isVerticalWall;
+            if (isNotWall)
             {
                 mapBoard[i][j] = EMPTY_SPACE;
                 continue;
@@ -49,10 +81,25 @@ void addCharactersToMap(char **map, Position food, Position *snake){
 
 bool getSnakeNextPosition(char **map, Position *snake){
 
+    struct termios old_tio, new_tio;
+	unsigned char c;
+
+    /* get the terminal settings for stdin */
+    tcgetattr(STDIN_FILENO,&old_tio);
+
+    /* we want to keep the old setting to restore them a the end */
+    new_tio=old_tio;
+
+    /* disable canonical mode (buffered i/o) and local echo */
+    new_tio.c_lflag &=(~ICANON & ~ECHO);
+
+    /* set the new settings immediately */
+    tcsetattr(STDIN_FILENO,TCSANOW,&new_tio);
+
     static char newPositionDirection;
 
     if(_kbhit()){
-        newPositionDirection = getch();
+        newPositionDirection = getchar();
     }
 
     Position next;
@@ -81,6 +128,8 @@ bool getSnakeNextPosition(char **map, Position *snake){
         case 'D':
             next.positionX += 1;
             break;
+        default:
+            return true;
     }
 
     bool nextPositionIsWall  = (verifyNextPosition(map, next, HORIZONTAL_WALL) 
@@ -90,8 +139,6 @@ bool getSnakeNextPosition(char **map, Position *snake){
     bool nextPositionIsValid = !(nextPositionIsSnake || nextPositionIsWall);
 
     if(nextPositionIsValid){
-        // map[snake->positionY][snake->positionX] = EMPTY_SPACE;
-        // map[next.positionY][next.positionX] = SNAKE_HEAD;
 
         for (int i = 8*8 - 1; i > 0; i--)
         {
@@ -112,6 +159,9 @@ bool getSnakeNextPosition(char **map, Position *snake){
     else if(nextPositionIsSnake){
         return true;
     }
+
+    tcsetattr(STDIN_FILENO,TCSANOW,&old_tio);
+
 }
 
 void changeFoodPositionAndGrowSnakeLength(char **map, Position *food, Position *snake, Map mapInfos){
