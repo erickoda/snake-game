@@ -167,9 +167,7 @@ void createNewFood(char **map, Position *food, Map mapInfos){
     randowCharacterPosition(food, mapInfos);
 
     bool positionHasSnake = map[food->positionY][food->positionX] == SNAKE;
-    printf(" %d %d \n", food->positionY, food->positionX);
     if(positionHasSnake){
-        printf("hmm");
         createNewFood(map, food, mapInfos);
     }
 

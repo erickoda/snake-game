@@ -43,4 +43,4 @@ Once you have compiled your project, you just have to execute it. You can do it 
 
 Now you have it open. Choose the difficulty you want to play. Then uses de keyboards 'w' 'a' 's' 'd' to move the snake. In the video below, you can see an example of a gameplay.
 
-<video src="./gameplayExample.mp4" height="400px"></video>
+<img src="./gameplayExample.gif" height="400px"></img>
