@@ -3,7 +3,7 @@
 
 extern int snakeLength;
 
-void endText(){
+void printScoreText(){
     int score = snakeLength*100;
     char finish;
     printf("Your score was %d\n", score);

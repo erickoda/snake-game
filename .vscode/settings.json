@@ -1,6 +1,13 @@
 {
     "files.associations": {
         "map.h": "c",
-        "stdio.h": "c"
+        "end.h": "c",
+        "opening.h": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c",
+        "time.h": "c",
+        "stdbool.h": "c",
+        "Windows.h": "c",
+        "conio.h": "c"
     }
 }

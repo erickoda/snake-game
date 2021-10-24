@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <locale.h>
 #include <time.h>
 #include <stdbool.h>
 #include <Windows.h>
@@ -14,7 +13,6 @@ int snakeLength;
 
 int main(){
 
-    setlocale(LC_ALL, "Portuguese");
     srand(time(NULL));
     bool snakesStillsAlive = true;
 
@@ -63,7 +61,7 @@ int main(){
 
     }while(snakesStillsAlive && !won);
 
-    endText();
+    printScoreText();
 
 
     /*
