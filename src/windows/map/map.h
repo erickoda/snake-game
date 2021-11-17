@@ -50,5 +50,6 @@ void randowCharacterPosition(Position *character, Map mapInfos);
 void growSnakeLength(char **map, Position *snake);
 void createNewFood(char **map, Position *food, Map mapInfos);
 void snakeTeleports(char **map, Position *snake, Position next);
+void changeSnakeBodyPosition(Position *snake);
 
 #endif

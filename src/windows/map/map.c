@@ -5,7 +5,7 @@
 #include "map.h"
 
 extern int snakeLength;  
-extern Map firstMapInfos;
+const extern Map firstMapInfos;
 
 void allocMap(char **map, Map *mapInfos){
     for (short i = 0; i < mapInfos->Sizes.Height; i++)
@@ -94,11 +94,7 @@ bool getSnakeNextPosition(char **map, Position *snake){
 
     if(nextPositionIsValid){
 
-        for (int i = (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Width-1-1) - 1; i > 0; i--)
-        {
-            snake[i].positionX = snake[i-1].positionX;
-            snake[i].positionY = snake[i-1].positionY;
-        }
+        changeSnakeBodyPosition(snake);
 
         snake->positionX = next.positionX;
         snake->positionY = next.positionY;
@@ -107,11 +103,8 @@ bool getSnakeNextPosition(char **map, Position *snake){
     }
 
     if(nextPositionIsWall){
-        for (int i = (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Width-1-1) - 1; i > 0; i--) //ajustar o valor inicial do for
-        {
-            snake[i].positionX = snake[i-1].positionX;
-            snake[i].positionY = snake[i-1].positionY;
-        }
+
+        changeSnakeBodyPosition(snake);
 
         snakeTeleports(map, snake, next);   
         return true;
@@ -119,6 +112,15 @@ bool getSnakeNextPosition(char **map, Position *snake){
 
     if(nextPositionIsSnake){
         return false;
+    }
+}
+
+void changeSnakeBodyPosition(Position *snake){
+
+    for (int i = (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Width-1-1) - 1; i > 0; i--)
+    {
+        snake[i].positionX = snake[i-1].positionX;
+        snake[i].positionY = snake[i-1].positionY;
     }
 }
 
@@ -176,7 +178,7 @@ void createNewFood(char **map, Position *food, Map mapInfos){
 }
 
 void growSnakeLength(char **map, Position *snake){
-    for (int i = snakeLength + 1; i >= 0; i--)//Lembrar de finalizar o jogo antes do snakeLength estourar isso ak
+    for (int i = snakeLength + 1; i >= 0; i--)
     {   
         bool isSnake = (i <= snakeLength);
         if(isSnake){
