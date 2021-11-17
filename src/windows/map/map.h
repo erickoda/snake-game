@@ -17,7 +17,7 @@ typedef struct
 
 typedef struct
 {
-    int Length;
+    int Width;
     int Height;
 
 } MapSizes;
@@ -40,7 +40,7 @@ typedef struct
 
 void allocMap(char **map, Map *mapInfos);
 void createMapBoard(char **mapBoard, Map *mapInfos);
-void addCharactersToMap(char **map, Position food, Position *snake);
+void addCharactersToMap(char **map, const Position *food, const Position *snake);
 bool getSnakeNextPosition(char **map, Position *snake);
 short verifyNextPosition(char **map, Position next, char nextChar);
 void changeFoodPositionAndGrowSnakeLength(char **map, Position *food, Position *snake, Map mapInfos);

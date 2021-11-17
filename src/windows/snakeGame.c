@@ -21,19 +21,19 @@ int main(){
         Variables creation and adjustments
     */
     firstMapInfos.Sizes.Height = 15;
-    firstMapInfos.Sizes.Length = 15;
+    firstMapInfos.Sizes.Width = 30;
     firstMapInfos.Lines.FirstColumn = 0;
     firstMapInfos.Lines.FirstLine = 0;
 
     Position *snake;
-    snake = (Position *) calloc(sizeof(Position),(firstMapInfos.Sizes.Length-2)*(firstMapInfos.Sizes.Height-2));
+    snake = (Position *) calloc(sizeof(Position),(firstMapInfos.Sizes.Width-2)*(firstMapInfos.Sizes.Height-2));
     randowCharacterPosition(snake, firstMapInfos);
 
     Position food;
     randowCharacterPosition(&food, firstMapInfos);
 
     char **mapBoard;
-    mapBoard = (char **) malloc(firstMapInfos.Sizes.Length*sizeof(char*));
+    mapBoard = (char **) malloc(firstMapInfos.Sizes.Height*sizeof(char*));
     allocMap(mapBoard, &firstMapInfos);
 
 
@@ -45,7 +45,7 @@ int main(){
     int won = false;
 
     createMapBoard(mapBoard, &firstMapInfos);
-    addCharactersToMap(mapBoard, food, snake);
+    addCharactersToMap(mapBoard, &food, snake);
 
     do{
         system("cls");
@@ -55,7 +55,7 @@ int main(){
         changeFoodPositionAndGrowSnakeLength(mapBoard, &food, snake, firstMapInfos);
         Sleep(gameDifficulty*33);
 
-        if(snakeLength == (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Length-1-1) - 1){
+        if(snakeLength == (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Width-1-1) - 1){
             won = true;
         }
 

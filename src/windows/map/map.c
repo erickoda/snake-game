@@ -8,17 +8,17 @@ extern int snakeLength;
 extern Map firstMapInfos;
 
 void allocMap(char **map, Map *mapInfos){
-    for (short i = 0; i < mapInfos->Sizes.Length; i++)
+    for (short i = 0; i < mapInfos->Sizes.Height; i++)
     {
-        map[i] = (char *) malloc(mapInfos->Sizes.Height*sizeof(char));
+        map[i] = (char *) malloc(mapInfos->Sizes.Width*sizeof(char));
     }
 }
 
 void createMapBoard(char **mapBoard, Map *mapInfos){
 
-    for (short i = 0; i < mapInfos->Sizes.Length; i++)
+    for (short i = 0; i < mapInfos->Sizes.Height; i++)
     {
-        for (short j = 0; j < mapInfos->Sizes.Height; j++)
+        for (short j = 0; j < mapInfos->Sizes.Width; j++)
         {
             bool isHorizontalWall = (i == mapInfos->Lines.FirstLine) || (i == mapInfos->Sizes.Height - 1);
             if (isHorizontalWall)
@@ -27,7 +27,7 @@ void createMapBoard(char **mapBoard, Map *mapInfos){
                 continue;
             }
 
-            bool isVerticalWall = (!isHorizontalWall) && (j == mapInfos->Lines.FirstColumn || j == mapInfos->Sizes.Length - 1);
+            bool isVerticalWall = (!isHorizontalWall) && (j == mapInfos->Lines.FirstColumn || j == mapInfos->Sizes.Width - 1);
             if(isVerticalWall){
                 mapBoard[i][j] = VERTICAL_WALL;
                 continue;
@@ -43,9 +43,9 @@ void createMapBoard(char **mapBoard, Map *mapInfos){
     }
 }
 
-void addCharactersToMap(char **map, Position food, Position *snake){
-    map[food.positionY][food.positionX] = FOOD;
-    map[snake[0].positionY][snake[0].positionX] = SNAKE;
+void addCharactersToMap(char **map, const Position *food, const Position *snake){
+    map[food->positionY][food->positionX] = FOOD;
+    map[snake->positionY][snake->positionX] = SNAKE;
 }
 
 bool getSnakeNextPosition(char **map, Position *snake){
@@ -94,7 +94,7 @@ bool getSnakeNextPosition(char **map, Position *snake){
 
     if(nextPositionIsValid){
 
-        for (int i = (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Length-1-1) - 1; i > 0; i--)
+        for (int i = (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Width-1-1) - 1; i > 0; i--)
         {
             snake[i].positionX = snake[i-1].positionX;
             snake[i].positionY = snake[i-1].positionY;
@@ -107,7 +107,7 @@ bool getSnakeNextPosition(char **map, Position *snake){
     }
 
     if(nextPositionIsWall){
-        for (int i = (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Length-1-1) - 1; i > 0; i--) //ajustar o valor inicial do for
+        for (int i = (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Width-1-1) - 1; i > 0; i--) //ajustar o valor inicial do for
         {
             snake[i].positionX = snake[i-1].positionX;
             snake[i].positionY = snake[i-1].positionY;
@@ -137,10 +137,10 @@ void snakeTeleports(char **map, Position *snake, Position next){
 
     bool nextPositionIsVertical_RightWall = verifyNextPosition(map, next, VERTICAL_WALL) && (next.positionX == firstMapInfos.Lines.FirstLine);
     if(nextPositionIsVertical_RightWall){
-        snake->positionX = firstMapInfos.Sizes.Height-1-1;
+        snake->positionX = firstMapInfos.Sizes.Width-1-1;
         return;
     }
-    bool nextPositionIsVertical_LeftWall = verifyNextPosition(map, next, VERTICAL_WALL) && (next.positionX == firstMapInfos.Sizes.Length-1);
+    bool nextPositionIsVertical_LeftWall = verifyNextPosition(map, next, VERTICAL_WALL) && (next.positionX == firstMapInfos.Sizes.Width-1);
     if(nextPositionIsVertical_LeftWall){
         snake->positionX = firstMapInfos.Lines.FirstLine + 1;
         return;
@@ -185,7 +185,7 @@ void growSnakeLength(char **map, Position *snake){
             map[snake[i].positionY][snake[i].positionX] = EMPTY_SPACE; //Clean the old space of the snake
         }
     }
-    map[snake[0].positionY][snake[0].positionX] = SNAKE_HEAD;
+    map[snake->positionY][snake->positionX] = SNAKE_HEAD;
 }
 
 short verifyNextPosition(char **map, Position next, char nextChar){
@@ -199,9 +199,9 @@ short verifyNextPosition(char **map, Position next, char nextChar){
 }
 
 void printMap(char **map, Map mapInfos){
-    for (int i = 0; i < mapInfos.Sizes.Length; i++)
+    for (int i = 0; i < mapInfos.Sizes.Height; i++)
     {
-        for (int j = 0; j < mapInfos.Sizes.Height; j++)
+        for (int j = 0; j < mapInfos.Sizes.Width; j++)
         {
             printf("%c", map[i][j]);
         }
@@ -214,6 +214,6 @@ short randowInicialPosition(short maxPosition){
 }
 
 void randowCharacterPosition(Position *character, Map mapInfos){
-    character->positionX = randowInicialPosition(mapInfos.Sizes.Length - 1 - 1);
-    character->positionY = randowInicialPosition(mapInfos.Sizes.Length - 1 - 1);
+    character->positionX = randowInicialPosition(mapInfos.Sizes.Width - 1 - 1);
+    character->positionY = randowInicialPosition(mapInfos.Sizes.Height - 1 - 1);
 }
