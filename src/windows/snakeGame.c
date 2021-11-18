@@ -42,6 +42,7 @@ int main(){
     */
     printOpeningTitle();
     int gameDifficulty = chooseGameDifficulty();
+    float speed;
     int won = false;
 
     createMapBoard(mapBoard, &firstMapInfos);
@@ -49,15 +50,18 @@ int main(){
 
     do{
         system("cls");
+        speed = 200.0 / gameDifficulty;
+
         printMap(mapBoard, firstMapInfos);
         snakesStillsAlive = 
         getSnakeNextPosition(mapBoard, snake);
-        changeFoodPositionAndGrowSnakeLength(mapBoard, &food, snake, firstMapInfos);
-        Sleep(gameDifficulty*33);
+        changeFoodPositionAndGrowSnakeLength(mapBoard, &food, snake, firstMapInfos); /*TODO -> Change this fn name*/
 
         if(snakeLength == (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Width-1-1) - 1){
             won = true;
         }
+        // gameDifficulty++; //TODO acrescentar a speed -> if ((score % 2 == 0) && snakeHasEaten)
+        Sleep(speed);
 
     }while(snakesStillsAlive && !won);
 

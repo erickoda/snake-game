@@ -86,9 +86,9 @@ bool getSnakeNextPosition(char **map, Position *snake){
             return true;
     }
 
-    bool nextPositionIsWall  = (verifyNextPosition(map, next, HORIZONTAL_WALL) 
-                                || verifyNextPosition(map, next, VERTICAL_WALL));
-    bool nextPositionIsSnake = verifyNextPosition(map, next, SNAKE);
+    bool nextPositionIsWall  = (verifyNextPositionHasChar(map, next, HORIZONTAL_WALL)
+                                || verifyNextPositionHasChar(map, next, VERTICAL_WALL));
+    bool nextPositionIsSnake = verifyNextPositionHasChar(map, next, SNAKE);
 
     bool nextPositionIsValid = !(nextPositionIsSnake || nextPositionIsWall);
 
@@ -126,37 +126,37 @@ void changeSnakeBodyPosition(Position *snake){
 
 void snakeTeleports(char **map, Position *snake, Position next){
     
-    bool nextPositionIsHorizontal_TopWall = verifyNextPosition(map, next, HORIZONTAL_WALL) && (next.positionY == firstMapInfos.Lines.FirstLine);
+    bool nextPositionIsHorizontal_TopWall = verifyNextPositionHasChar(map, next, HORIZONTAL_WALL) && (next.positionY == firstMapInfos.Lines.FirstLine);
     if(nextPositionIsHorizontal_TopWall){
         snake->positionY = firstMapInfos.Sizes.Height-1-1;
         return;
     }
-    bool nextPositionIsHorizontal_BottomWall = verifyNextPosition(map, next, HORIZONTAL_WALL) && (next.positionY == firstMapInfos.Sizes.Height-1);
+    bool nextPositionIsHorizontal_BottomWall = verifyNextPositionHasChar(map, next, HORIZONTAL_WALL) && (next.positionY == firstMapInfos.Sizes.Height-1);
     if(nextPositionIsHorizontal_BottomWall){
         snake->positionY = firstMapInfos.Lines.FirstLine + 1;
         return;
     }
 
-    bool nextPositionIsVertical_RightWall = verifyNextPosition(map, next, VERTICAL_WALL) && (next.positionX == firstMapInfos.Lines.FirstLine);
+    bool nextPositionIsVertical_RightWall = verifyNextPositionHasChar(map, next, VERTICAL_WALL) && (next.positionX == firstMapInfos.Lines.FirstLine);
     if(nextPositionIsVertical_RightWall){
         snake->positionX = firstMapInfos.Sizes.Width-1-1;
         return;
     }
-    bool nextPositionIsVertical_LeftWall = verifyNextPosition(map, next, VERTICAL_WALL) && (next.positionX == firstMapInfos.Sizes.Width-1);
+    bool nextPositionIsVertical_LeftWall = verifyNextPositionHasChar(map, next, VERTICAL_WALL) && (next.positionX == firstMapInfos.Sizes.Width-1);
     if(nextPositionIsVertical_LeftWall){
         snake->positionX = firstMapInfos.Lines.FirstLine + 1;
         return;
     }
 }
 
-void changeFoodPositionAndGrowSnakeLength(char **map, Position *food, Position *snake, Map mapInfos){
+void changeFoodPositionAndGrowSnakeLength(char **map, Position *food, Position *snake, Map mapInfos){ // Todo -> dps de tirar a fn growSnakeLength daqui, trocar o nome da fn
 
     bool snakeHasEaten = (snake->positionX == food->positionX) && (snake->positionY == food->positionY);
     if(snakeHasEaten){
 
         snakeLength++;
 
-        growSnakeLength(map, snake);
+        growSnakeLength(map, snake); //Todo -> provavelmente eu posso deixar essa fn no main, já que ela é involvada independentemente de qlqr coisa 
 
         createNewFood(map, food, mapInfos);
         return;
@@ -177,7 +177,7 @@ void createNewFood(char **map, Position *food, Map mapInfos){
 
 }
 
-void growSnakeLength(char **map, Position *snake){
+void growSnakeLength(char **map, Position *snake){ //Todo -> change this fn name -> this fn dont really change the snake length -> this fn update the snake body position in the map
     for (int i = snakeLength + 1; i >= 0; i--)
     {   
         bool isSnake = (i <= snakeLength);
@@ -190,7 +190,7 @@ void growSnakeLength(char **map, Position *snake){
     map[snake->positionY][snake->positionX] = SNAKE_HEAD;
 }
 
-short verifyNextPosition(char **map, Position next, char nextChar){
+short verifyNextPositionHasChar(char **map, Position next, char nextChar){
 
     bool nextPositionIsChar = map[next.positionY][next.positionX] == nextChar;
     if(nextPositionIsChar){

@@ -10,9 +10,9 @@ void printOpeningTitle(){
 int chooseGameDifficulty(){
     const int gameDifficulty;
     printf("Choose the difficulty you will play?\n");
-    printf("(3) Easy\n");
+    printf("(1) Easy\n");
     printf("(2) Normal\n");
-    printf("(1) Hard\n");
+    printf("(3) Hard\n");
     scanf("%d", &gameDifficulty);
 
     return gameDifficulty;
