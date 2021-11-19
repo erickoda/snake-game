@@ -4,9 +4,10 @@
 #define HORIZONTAL_WALL '-'
 #define VERTICAL_WALL '|'
 #define EMPTY_SPACE ' '
-#define SNAKE '@'
-#define SNAKE_HEAD 'O'
+#define SNAKE '0'
+#define SNAKE_HEAD '@'
 #define FOOD '*'
+#define SNAKE_NECK 'O'
 
 typedef struct
 {
@@ -41,15 +42,18 @@ typedef struct
 void allocMap(char **map, Map *mapInfos);
 void createMapBoard(char **mapBoard, Map *mapInfos);
 void addCharactersToMap(char **map, const Position *food, const Position *snake);
-bool getSnakeNextPosition(char **map, Position *snake);
+char getSnakeNextPosition(char **map, Position *snake, char newPositionDirection);
+void snakeWalks(Position *snake, char nextPositionDirection);
+void snakeTeleports(char **map, Position *snake, char newPositionDirection);
 short verifyNextPositionHasChar(char **map, Position next, char nextChar);
-void changeFoodPositionAndGrowSnakeLength(char **map, Position *food, Position *snake, Map mapInfos);
 void printMap(char **map, Map mapInfos);
 short randowInicialPosition(short maxPosition);
 void randowCharacterPosition(Position *character, Map mapInfos);
-void growSnakeLength(char **map, Position *snake);
+void updateSnakePositionOnMap(char **map, Position *snake, int snakeLength);
 void createNewFood(char **map, Position *food, Map mapInfos);
-void snakeTeleports(char **map, Position *snake, Position next);
+void snakeTeleportsHorizontaly(char **map, Position *snake, char nextPositionDirection);
+void snakeTeleportsVerticaly(char **map, Position *snake, char nextPositionDirection);
 void changeSnakeBodyPosition(Position *snake);
+char getSnakeDirection();
 
 #endif

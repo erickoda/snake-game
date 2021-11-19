@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include "end.h"
 
-extern int snakeLength;
-
-void printScoreText(){
+void printScoreText(int snakeLength){
     int score = snakeLength*100;
     char finish;
     printf("Your score was %d\n", score);

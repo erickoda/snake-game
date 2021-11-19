@@ -9,19 +9,22 @@
 #include "./opening_end/end.h"
 
 Map firstMapInfos;
-int snakeLength;
+
+int updateGameDificulty(int gameDifficulty, int snakeLength);
 
 int main(){
 
     srand(time(NULL));
-    bool snakesStillsAlive = true;
-
 
     /*
         Variables creation and adjustments
     */
+   
+    bool snakesStillsAlive = true;
+    int snakeLength = 0;
+
     firstMapInfos.Sizes.Height = 15;
-    firstMapInfos.Sizes.Width = 30;
+    firstMapInfos.Sizes.Width = 15;
     firstMapInfos.Lines.FirstColumn = 0;
     firstMapInfos.Lines.FirstLine = 0;
 
@@ -44,28 +47,54 @@ int main(){
     int gameDifficulty = chooseGameDifficulty();
     float speed;
     int won = false;
+    char nextPositionChar;
+    char snakeDirection;
+    bool hasEaten = false;
 
     createMapBoard(mapBoard, &firstMapInfos);
     addCharactersToMap(mapBoard, &food, snake);
 
     do{
         system("cls");
-        speed = 200.0 / gameDifficulty;
-
         printMap(mapBoard, firstMapInfos);
-        snakesStillsAlive = 
-        getSnakeNextPosition(mapBoard, snake);
-        changeFoodPositionAndGrowSnakeLength(mapBoard, &food, snake, firstMapInfos); /*TODO -> Change this fn name*/
+        speed = updateGameDificulty(gameDifficulty, snakeLength);
+
+        snakeDirection = getSnakeDirection();
+        nextPositionChar = getSnakeNextPosition(mapBoard, snake, snakeDirection);
+
+        // updateSnakePositionOnMap(mapBoard, snake, snakeLength);
+
+        if (nextPositionChar == HORIZONTAL_WALL || nextPositionChar == VERTICAL_WALL)
+            snakeTeleports(mapBoard, snake, snakeDirection);
+
+        if (nextPositionChar == EMPTY_SPACE)
+            snakeWalks(snake, snakeDirection);
+        
+        if (nextPositionChar == FOOD){
+            snakeWalks(snake, snakeDirection);
+            snakeLength++;
+            hasEaten = true;
+        }
+
+        if (nextPositionChar == SNAKE)
+            snakesStillsAlive = false;
+
+        updateSnakePositionOnMap(mapBoard, snake, snakeLength);
+
+        if(hasEaten){
+            createNewFood(mapBoard, &food, firstMapInfos); // -> Gambiarra -> pensar em um jeito de melhorar iiso ak
+            hasEaten = false;
+        }
 
         if(snakeLength == (firstMapInfos.Sizes.Height-1-1)*(firstMapInfos.Sizes.Width-1-1) - 1){
             won = true;
         }
-        // gameDifficulty++; //TODO acrescentar a speed -> if ((score % 2 == 0) && snakeHasEaten)
-        Sleep(speed);
+        
+        Sleep(speed); // gameDifficulty++; //TODO acrescentar a speed -> if ((score % 2 == 0) && snakeHasEaten)
 
     }while(snakesStillsAlive && !won);
 
-    printScoreText();
+    printScoreText(snakeLength);
 
 
     /*
@@ -78,4 +107,17 @@ int main(){
     free(mapBoard);
     free(snake);
     return 0;
+}
+
+int updateGameDificulty(int gameDifficulty, int snakeLength){
+
+    static int speedCoefficient;
+    int speed;
+
+    if (snakeLength % 10 == 0)
+        speedCoefficient += 1;
+
+    speed = 200.0 / gameDifficulty + speedCoefficient;
+
+    return speed;
 }
